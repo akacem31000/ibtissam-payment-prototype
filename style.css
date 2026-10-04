@@ -85,3 +85,35 @@ footer {
     padding: 40px 20px;
     margin-top: 50px;
 }
+.purchase-form {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.purchase-form h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.purchase-form label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.purchase-form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.purchase-form .buy-button {
+    margin-top: 25px;
+}
