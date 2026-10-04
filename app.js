@@ -1,7 +1,7 @@
 // =====================================================
 // Supabase configuration
 // =====================================================
-
+console.log("APP.JS IS WORKING");
 const SUPABASE_URL = "https://tmhokjnhtmptksyjaghx.supabase.co/rest/v1/";
 
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_eg7ZGgdEJ7TPg4QM-uEekA_eRFDUhGy";
