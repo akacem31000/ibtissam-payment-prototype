@@ -5,7 +5,6 @@
 console.log("APP.JS IS WORKING");
 
 const SUPABASE_URL = "https://tmhokjnhtmptksyjaghx.supabase.co";
-
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_eg7ZGgdEJ7TPg4QM-uEekA_eRFDUhGy";
 
 
@@ -78,11 +77,11 @@ async function loadCourses() {
     }
 
 
-    // Save services globally
+    // Save services
     currentServices = data;
 
 
-    // Clear loading message
+    // Clear loading
     container.innerHTML = "";
 
 
@@ -103,8 +102,7 @@ async function loadCourses() {
 
             <button
                 class="buy-button"
-                data-service-id="${service.id}"
-                data-service-slug="${service.slug}"
+                data-id="${service.id}"
             >
                 شراء الآن
             </button>
@@ -117,17 +115,21 @@ async function loadCourses() {
 
 
     // =================================================
-    // Add click events to purchase buttons
+    // Purchase buttons
     // =================================================
 
     document.querySelectorAll(".buy-button").forEach(button => {
 
-        button.addEventListener("click", () => {
+        button.addEventListener("click", function () {
 
-            const serviceId = button.dataset.serviceId;
-            const serviceSlug = button.dataset.serviceSlug;
+            const serviceId = this.getAttribute("data-id");
 
-            startPurchase(serviceId, serviceSlug);
+            console.log(
+                "Clicked service ID:",
+                serviceId
+            );
+
+            startPurchase(serviceId);
 
         });
 
@@ -137,21 +139,28 @@ async function loadCourses() {
 
 
 // =====================================================
-// Purchase - prototype only
+// Start purchase
 // =====================================================
 
-function startPurchase(serviceId, serviceSlug) {
-
-    console.log("Selected service ID:", serviceId);
-    console.log("Selected service slug:", serviceSlug);
-
+function startPurchase(serviceId) {
 
     const service = currentServices.find(
         item => String(item.id) === String(serviceId)
     );
 
 
+    console.log(
+        "Service found:",
+        service
+    );
+
+
     if (!service) {
+
+        console.error(
+            "Service not found for ID:",
+            serviceId
+        );
 
         alert("لم يتم العثور على الخدمة.");
 
@@ -163,25 +172,37 @@ function startPurchase(serviceId, serviceSlug) {
     selectedService = service;
 
 
-    // Find purchase form
-    const purchaseForm = document.getElementById("purchase-form");
-    const selectedServiceBox = document.getElementById("selected-service");
+    console.log(
+        "Selected service:",
+        selectedService
+    );
+
+
+    const purchaseForm =
+        document.getElementById("purchase-form");
+
+    const selectedServiceBox =
+        document.getElementById("selected-service");
 
 
     if (!purchaseForm || !selectedServiceBox) {
 
         console.error(
-            "Purchase form elements are missing from index.html."
+            "Purchase form elements are missing."
         );
 
-        alert("نموذج الشراء غير موجود في الصفحة.");
+        alert(
+            "نموذج الشراء غير موجود في الصفحة."
+        );
 
         return;
     }
 
 
     // Display selected service
+
     selectedServiceBox.innerHTML = `
+
         <div class="service-card">
 
             <h3>${service.name}</h3>
@@ -191,14 +212,17 @@ function startPurchase(serviceId, serviceSlug) {
             </p>
 
         </div>
+
     `;
 
 
-    // Show purchase form
+    // Show form
+
     purchaseForm.style.display = "block";
 
 
-    // Scroll to purchase form
+    // Scroll
+
     purchaseForm.scrollIntoView({
         behavior: "smooth"
     });
@@ -210,78 +234,94 @@ function startPurchase(serviceId, serviceSlug) {
 // Customer form
 // =====================================================
 
-const customerForm = document.getElementById("customer-form");
+const customerForm =
+    document.getElementById("customer-form");
 
 
 if (customerForm) {
 
-    customerForm.addEventListener("submit", function(event) {
+    customerForm.addEventListener(
+        "submit",
+        function (event) {
 
-        event.preventDefault();
+            event.preventDefault();
 
 
-        if (!selectedService) {
+            if (!selectedService) {
 
-            alert("يرجى اختيار دورة أولًا.");
+                alert(
+                    "يرجى اختيار دورة أولًا."
+                );
 
-            return;
+                return;
+            }
+
+
+            const customer = {
+
+                first_name:
+                    document.getElementById(
+                        "first-name"
+                    ).value,
+
+                last_name:
+                    document.getElementById(
+                        "last-name"
+                    ).value,
+
+                email:
+                    document.getElementById(
+                        "email"
+                    ).value,
+
+                phone:
+                    document.getElementById(
+                        "phone"
+                    ).value,
+
+                country:
+                    document.getElementById(
+                        "country"
+                    ).value
+
+            };
+
+
+            console.log(
+                "Selected service:",
+                selectedService
+            );
+
+
+            console.log(
+                "Customer:",
+                customer
+            );
+
+
+            alert(
+
+                "تم تسجيل بيانات الطلب التجريبية.\n\n" +
+
+                "الخدمة: " +
+                selectedService.name +
+
+                "\nالسعر: " +
+                selectedService.price +
+                " " +
+                selectedService.currency +
+
+                "\n\nالخطوة التالية ستكون PayPal Sandbox."
+
+            );
+
         }
-
-
-        const customer = {
-
-            first_name:
-                document.getElementById("first-name").value,
-
-            last_name:
-                document.getElementById("last-name").value,
-
-            email:
-                document.getElementById("email").value,
-
-            phone:
-                document.getElementById("phone").value,
-
-            country:
-                document.getElementById("country").value
-
-        };
-
-
-        console.log(
-            "Selected service:",
-            selectedService
-        );
-
-
-        console.log(
-            "Customer:",
-            customer
-        );
-
-
-        alert(
-
-            "تم تسجيل بيانات الطلب التجريبية.\n\n" +
-
-            "الخدمة: " +
-            selectedService.name +
-
-            "\nالسعر: " +
-            selectedService.price +
-            " " +
-            selectedService.currency +
-
-            "\n\nالخطوة التالية ستكون PayPal Sandbox."
-
-        );
-
-    });
+    );
 
 } else {
 
     console.warn(
-        "Customer form not found. Purchase form may not be added to index.html yet."
+        "Customer form not found."
     );
 
 }
