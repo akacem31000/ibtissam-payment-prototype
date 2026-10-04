@@ -118,14 +118,34 @@ async function loadCourses() {
 
 function startPurchase(serviceId, serviceSlug) {
 
-    alert(
-        "تم اختيار الخدمة رقم: " +
-        serviceId +
-        "\n\nSlug: " +
-        serviceSlug +
-        "\n\nسنربط هذه الخطوة لاحقًا مع PayPal."
+    const service = currentServices.find(
+        item => String(item.id) === String(serviceId)
     );
 
+    if (!service) {
+        alert("لم يتم العثور على الخدمة.");
+        return;
+    }
+
+    selectedService = service;
+
+    const purchaseForm = document.getElementById("purchase-form");
+    const selectedServiceBox = document.getElementById("selected-service");
+
+    selectedServiceBox.innerHTML = `
+        <div class="service-card">
+            <h3>${service.name}</h3>
+            <p class="service-price">
+                ${service.price} ${service.currency}
+            </p>
+        </div>
+    `;
+
+    purchaseForm.style.display = "block";
+
+    purchaseForm.scrollIntoView({
+        behavior: "smooth"
+    });
 }
 
 
