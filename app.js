@@ -18,7 +18,8 @@ const db = createClient(
     SUPABASE_PUBLISHABLE_KEY
 );
 
-
+let currentServices = [];
+let selectedService = null;
 // =====================================================
 // Load courses
 // =====================================================
@@ -61,7 +62,7 @@ async function loadCourses() {
         return;
     }
 
-
+    currentServices = data;
     container.innerHTML = "";
 
 
@@ -152,5 +153,31 @@ function startPurchase(serviceId, serviceSlug) {
 // =====================================================
 // Start application
 // =====================================================
+document.getElementById("customer-form").addEventListener("submit", function(event) {
 
+    event.preventDefault();
+
+    if (!selectedService) {
+        alert("يرجى اختيار دورة أولًا.");
+        return;
+    }
+
+    const customer = {
+        first_name: document.getElementById("first-name").value,
+        last_name: document.getElementById("last-name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        country: document.getElementById("country").value
+    };
+
+    console.log("Selected service:", selectedService);
+    console.log("Customer:", customer);
+
+    alert(
+        "تم تسجيل بيانات الطلب التجريبية.\n\n" +
+        "الخدمة: " + selectedService.name +
+        "\nالسعر: " + selectedService.price + " " + selectedService.currency +
+        "\n\nالخطوة التالية ستكون PayPal Sandbox."
+    );
+});
 loadCourses();
