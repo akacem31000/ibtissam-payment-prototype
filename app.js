@@ -1,4 +1,11 @@
 // =====================================================
+// TEST - التأكد أن GitHub Pages يحمل النسخة الجديدة
+// =====================================================
+
+alert("هذه هي النسخة الجديدة من app.js");
+
+
+// =====================================================
 // Supabase configuration
 // =====================================================
 
@@ -143,6 +150,12 @@ async function loadCourses() {
 // =====================================================
 
 function startPurchase(serviceId) {
+
+    console.log(
+        "startPurchase received ID:",
+        serviceId
+    );
+
 
     const service = currentServices.find(
         item => String(item.id) === String(serviceId)
