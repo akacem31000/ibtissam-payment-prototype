@@ -82,13 +82,17 @@
         </h2>
 
 
-        <!-- Selected service -->
+        <!-- =================================================
+             Selected Service
+             ================================================= -->
 
         <div id="selected-service"></div>
 
 
 
-        <!-- Customer information -->
+        <!-- =================================================
+             Customer Information
+             ================================================= -->
 
         <form id="customer-form">
 
@@ -150,41 +154,59 @@
             >
 
 
+
             <!-- =================================================
-                 PayPal
+                 Continue to Payment
                  ================================================= -->
 
-            <div
-                id="paypal-section"
-                style="display:none; margin-top:30px;"
+            <button
+                type="submit"
+                id="continue-payment"
             >
-
-                <h3>
-                    الدفع عبر PayPal
-                </h3>
-
-                <p>
-                    بعد الضغط على زر PayPal سيتم تحويلك إلى
-                    PayPal لإتمام الدفع بأمان.
-                </p>
-
-
-                <div
-                    id="paypal-button-container"
-                ></div>
-
-
-                <div
-                    id="paypal-message"
-                    style="margin-top:15px;"
-                ></div>
-
-            </div>
+                متابعة إلى الدفع
+            </button>
 
 
         </form>
 
+
+
+        <!-- =================================================
+             PayPal Payment Section
+             ================================================= -->
+
+        <div
+            id="paypal-section"
+            style="display:none; margin-top:30px;"
+        >
+
+            <h3>
+                الدفع عبر PayPal
+            </h3>
+
+
+            <p>
+                بعد الضغط على زر PayPal سيتم تحويلك إلى
+                PayPal لإتمام الدفع بأمان.
+            </p>
+
+
+            <div
+                id="paypal-button-container"
+            ></div>
+
+
+            <div
+                id="paypal-message"
+                style="margin-top:15px;"
+            ></div>
+
+
+        </div>
+
+
     </div>
+
 
 </main>
 
