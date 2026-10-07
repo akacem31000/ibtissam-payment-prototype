@@ -789,3 +789,55 @@ function showPayPalMessage(
 // =====================================================
 
 loadCourses();
+
+async function testPayPalFunction() {
+
+    console.log("=== TEST EDGE FUNCTION ===");
+
+    const functionUrl =
+        `${SUPABASE_URL}/functions/v1/paypal-create-order`;
+
+    console.log("Function URL:", functionUrl);
+
+    try {
+
+        const response = await fetch(
+            functionUrl,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_PUBLISHABLE_KEY
+                },
+
+                body: JSON.stringify({
+                    service_id: 2
+                })
+            }
+        );
+
+        console.log(
+            "HTTP status:",
+            response.status
+        );
+
+        const text =
+            await response.text();
+
+        console.log(
+            "Response:",
+            text
+        );
+
+    } catch (error) {
+
+        console.error(
+            "FUNCTION FETCH ERROR:",
+            error
+        );
+
+    }
+}
+
+testPayPalFunction();
