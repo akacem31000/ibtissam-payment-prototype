@@ -519,25 +519,28 @@ function renderPayPalButtons() {
                 );
 
 
-                const response =
-                    await fetch(
-                        CREATE_ORDER_FUNCTION,
-                        {
-                            method: "POST",
+const response =
+    await fetch(
+        CREATE_ORDER_FUNCTION,
+        {
+            method: "POST",
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
+            headers: {
+                "Content-Type": "application/json",
 
-                            body:
-                                JSON.stringify({
-                                    service_id:
-                                        selectedService.id
-                                })
-                        }
-                    );
+                "apikey":
+                    SUPABASE_PUBLISHABLE_KEY,
 
+                "Authorization":
+                    `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+            },
+
+            body: JSON.stringify({
+                service_id:
+                    selectedService.id
+            })
+        }
+    );
 
                 const result =
                     await response.json();
