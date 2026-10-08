@@ -1,3 +1,4 @@
+
 // =====================================================
 // Supabase configuration
 // =====================================================
@@ -6,7 +7,6 @@ console.log("APP.JS IS WORKING");
 
 const SUPABASE_URL = "https://tmhokjnhtmptksyjaghx.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_eg7ZGgdEJ7TPg4QM-uEekA_eRFDUhGy";
-
 
 // =====================================================
 // Initialize Supabase
@@ -519,28 +519,31 @@ function renderPayPalButtons() {
                 );
 
 
-const response =
-    await fetch(
-        CREATE_ORDER_FUNCTION,
-        {
-            method: "POST",
+                const response =
+                    await fetch(
+                        CREATE_ORDER_FUNCTION,
+                        {
+                            method: "POST",
 
-            headers: {
-                "Content-Type": "application/json",
+                            headers: {
+                                "Content-Type":
+                                    "application/json",
 
-                "apikey":
-                    SUPABASE_PUBLISHABLE_KEY,
+                                "apikey":
+                                    SUPABASE_PUBLISHABLE_KEY,
 
-                "Authorization":
-                    `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
-            },
+                                "Authorization":
+                                    `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+                            },
 
-            body: JSON.stringify({
-                service_id:
-                    selectedService.id
-            })
-        }
-    );
+                            body:
+                                JSON.stringify({
+                                    service_id:
+                                        selectedService.id
+                                })
+                        }
+                    );
+
 
                 const result =
                     await response.json();
@@ -614,6 +617,10 @@ const response =
                 );
 
 
+                // =========================================
+                // Capture PayPal Order
+                // =========================================
+
                 const response =
                     await fetch(
                         CAPTURE_ORDER_FUNCTION,
@@ -622,7 +629,17 @@ const response =
 
                             headers: {
                                 "Content-Type":
-                                    "application/json"
+                                    "application/json",
+
+                                // IMPORTANT:
+                                // Supabase credentials are required
+                                // for the Edge Function request.
+
+                                "apikey":
+                                    SUPABASE_PUBLISHABLE_KEY,
+
+                                "Authorization":
+                                    `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
                             },
 
                             body:
@@ -666,7 +683,10 @@ const response =
                 showPayPalMessage(
                     `
                     <div class="payment-success">
-                        <h3>تم الدفع بنجاح ✓</h3>
+
+                        <h3>
+                            تم الدفع بنجاح ✓
+                        </h3>
 
                         <p>
                             شكرًا لك.
@@ -677,6 +697,7 @@ const response =
                             رقم الطلب:
                             ${result.order_id}
                         </p>
+
                     </div>
                     `
                 );
@@ -689,9 +710,8 @@ const response =
 
 
                 // =====================================
-                // IMPORTANT
-                // Customer/order database will be
-                // connected in the next step.
+                // Customer/order database
+                // will be connected next.
                 // =====================================
 
 
@@ -790,45 +810,70 @@ function showPayPalMessage(
 
 loadCourses();
 
+
+// =====================================================
+// Test PayPal Edge Function
+// =====================================================
+
 async function testPayPalFunction() {
 
-    console.log("=== TEST EDGE FUNCTION ===");
+    console.log(
+        "=== TEST EDGE FUNCTION ==="
+    );
+
 
     const functionUrl =
         `${SUPABASE_URL}/functions/v1/paypal-create-order`;
 
-    console.log("Function URL:", functionUrl);
+
+    console.log(
+        "Function URL:",
+        functionUrl
+    );
+
 
     try {
 
-        const response = await fetch(
-            functionUrl,
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                functionUrl,
+                {
+                    method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json",
-                    "apikey": SUPABASE_PUBLISHABLE_KEY
-                },
+                    headers: {
+                        "Content-Type":
+                            "application/json",
 
-                body: JSON.stringify({
-                    service_id: 2
-                })
-            }
-        );
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        "Authorization":
+                            `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+                    },
+
+                    body:
+                        JSON.stringify({
+                            service_id: 2
+                        })
+                }
+            );
+
 
         console.log(
             "HTTP status:",
             response.status
         );
 
+
         const text =
             await response.text();
+
 
         console.log(
             "Response:",
             text
         );
+
 
     } catch (error) {
 
@@ -838,6 +883,8 @@ async function testPayPalFunction() {
         );
 
     }
+
 }
+
 
 testPayPalFunction();
