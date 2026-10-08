@@ -1,4 +1,6 @@
 
+
+
 // =====================================================
 // Supabase configuration
 // =====================================================
@@ -7,6 +9,8 @@ console.log("APP.JS IS WORKING");
 
 const SUPABASE_URL = "https://tmhokjnhtmptksyjaghx.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_eg7ZGgdEJ7TPg4QM-uEekA_eRFDUhGy";
+
+
 
 // =====================================================
 // Initialize Supabase
@@ -275,7 +279,10 @@ function startPurchase(serviceId) {
         "block";
 
 
+    // =================================================
     // Reset PayPal section
+    // =================================================
+
     hidePayPal();
 
 
@@ -304,6 +311,10 @@ if (customerForm) {
 
             event.preventDefault();
 
+
+            // =============================================
+            // Check selected service
+            // =============================================
 
             if (!selectedService) {
 
@@ -380,7 +391,10 @@ if (customerForm) {
             showPayPal();
 
 
+            // =============================================
             // Render PayPal buttons
+            // =============================================
+
             renderPayPalButtons();
 
         }
@@ -498,7 +512,9 @@ function renderPayPalButtons() {
     }
 
 
+    // =================================================
     // Prevent duplicate buttons
+    // =================================================
 
     container.innerHTML =
         "";
@@ -506,9 +522,9 @@ function renderPayPalButtons() {
 
     paypal.Buttons({
 
-        // =============================================
+        // =================================================
         // Create PayPal Order
-        // =============================================
+        // =================================================
 
         createOrder: async function () {
 
@@ -526,6 +542,7 @@ function renderPayPalButtons() {
                             method: "POST",
 
                             headers: {
+
                                 "Content-Type":
                                     "application/json",
 
@@ -534,13 +551,17 @@ function renderPayPalButtons() {
 
                                 "Authorization":
                                     `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+
                             },
 
                             body:
                                 JSON.stringify({
+
                                     service_id:
                                         selectedService.id
+
                                 })
+
                         }
                     );
 
@@ -596,9 +617,9 @@ function renderPayPalButtons() {
         },
 
 
-        // =============================================
+        // =================================================
         // Approve + Capture
-        // =============================================
+        // =================================================
 
         onApprove: async function (
             data
@@ -617,9 +638,40 @@ function renderPayPalButtons() {
                 );
 
 
-                // =========================================
+                // =================================================
+                // Validate selected service
+                // =================================================
+
+                if (!selectedService) {
+
+                    throw new Error(
+                        "لم يتم تحديد الخدمة."
+                    );
+
+                }
+
+
+                // =================================================
+                // Validate customer data
+                // =================================================
+
+                if (
+                    !customerData ||
+                    !customerData.first_name ||
+                    !customerData.last_name ||
+                    !customerData.email
+                ) {
+
+                    throw new Error(
+                        "بيانات العميل غير مكتملة."
+                    );
+
+                }
+
+
+                // =================================================
                 // Capture PayPal Order
-                // =========================================
+                // =================================================
 
                 const response =
                     await fetch(
@@ -628,28 +680,39 @@ function renderPayPalButtons() {
                             method: "POST",
 
                             headers: {
+
                                 "Content-Type":
                                     "application/json",
-
-                                // IMPORTANT:
-                                // Supabase credentials are required
-                                // for the Edge Function request.
 
                                 "apikey":
                                     SUPABASE_PUBLISHABLE_KEY,
 
                                 "Authorization":
                                     `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+
                             },
 
                             body:
                                 JSON.stringify({
+
                                     order_id:
-                                        data.orderID
+                                        data.orderID,
+
+                                    service_id:
+                                        selectedService.id,
+
+                                    customer:
+                                        customerData
+
                                 })
+
                         }
                     );
 
+
+                // =================================================
+                // Read response
+                // =================================================
 
                 const result =
                     await response.json();
@@ -660,6 +723,10 @@ function renderPayPalButtons() {
                     result
                 );
 
+
+                // =================================================
+                // Verify successful payment
+                // =================================================
 
                 if (
                     !response.ok ||
@@ -676,9 +743,9 @@ function renderPayPalButtons() {
                 }
 
 
-                // =====================================
+                // =================================================
                 // Payment successful
-                // =====================================
+                // =================================================
 
                 showPayPalMessage(
                     `
@@ -703,16 +770,38 @@ function renderPayPalButtons() {
                 );
 
 
+                // =================================================
+                // Log complete result
+                // =================================================
+
                 console.log(
-                    "PAYMENT COMPLETED:",
+                    "PAYMENT COMPLETED AND SAVED:",
                     result
                 );
 
 
-                // =====================================
-                // Customer/order database
-                // will be connected next.
-                // =====================================
+                console.log(
+                    "Database order ID:",
+                    result.database_order_id
+                );
+
+
+                console.log(
+                    "Customer ID:",
+                    result.customer_id
+                );
+
+
+                console.log(
+                    "Service ID:",
+                    result.service_id
+                );
+
+
+                console.log(
+                    "PayPal transaction ID:",
+                    result.transaction_id
+                );
 
 
             } catch (error) {
@@ -732,9 +821,9 @@ function renderPayPalButtons() {
         },
 
 
-        // =============================================
+        // =================================================
         // Cancel
-        // =============================================
+        // =================================================
 
         onCancel: function (
             data
@@ -753,9 +842,9 @@ function renderPayPalButtons() {
         },
 
 
-        // =============================================
+        // =================================================
         // Error
-        // =============================================
+        // =================================================
 
         onError: function (
             error
@@ -841,6 +930,7 @@ async function testPayPalFunction() {
                     method: "POST",
 
                     headers: {
+
                         "Content-Type":
                             "application/json",
 
@@ -849,12 +939,16 @@ async function testPayPalFunction() {
 
                         "Authorization":
                             `Bearer ${SUPABASE_PUBLISHABLE_KEY}`
+
                     },
 
                     body:
                         JSON.stringify({
+
                             service_id: 2
+
                         })
+
                 }
             );
 
